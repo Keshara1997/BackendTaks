@@ -114,3 +114,84 @@ interface LoanScheduleAccrualData {
       return this.trapDoor;
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  class GlobalConfigurationProperty {
+    private readonly data: GlobalConfigurationProperty;
+
+    constructor(
+    name: string,
+    enabled: boolean,
+    value: number | null,
+    dateValue: Date,
+    stringValue: string,
+    id: number | null,
+    description: string,
+    trapDoor: boolean
+    ) {
+    this.data = new GlobalConfigurationProperty(
+        name,
+        enabled,
+        value,
+        dateValue,
+        stringValue,
+        id,
+        description,
+        trapDoor
+    );
+    }
+
+    getName(): string {
+    return this.data.getName();
+    }
+
+    isEnabled(): boolean {
+    return this.data.isEnabled();
+    }
+
+    getValue(): number | null {
+    return this.data.getValue();
+    }
+
+    getStringValue(): string {
+    return this.data.getStringValue();
+    }
+
+    getDateValue(): Date {
+    return this.data.getDateValue();
+    }
+
+    getId(): number | null {
+    return this.data.getId();
+    }
+
+    getDescription(): string {
+    return this.data.getDescription();
+    }
+
+    isTrapDoor(): boolean {
+    return this.data.isTrapDoor();
+    }
+}
+
+
+//
