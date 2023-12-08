@@ -9,9 +9,14 @@ const app = express();
 const port = config.port;
 
 
-app.get('/', (req, res) => {
+app.get('/getAccounting', (_req, res) => {
     res.send('Hello World!');
+    console.log('Hello World!');
 });
+
+const accounting = require('./route/accounting');
+
+app.use('/accounting', accounting);
 
 const server = async () => {
  app.listen(port, () => {
