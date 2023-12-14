@@ -1,11 +1,15 @@
-import express, { Request, Response } from "express";
-import { connection } from "../db/database";
+import { de } from "date-fns/locale";
+import { format } from "date-fns";
+import connection from "../../db/database";  
+import { LoanScheduleAccrualData } from "../type";
+import { retrieveOrganisationStartDate } from "../accrulAccount/retrieveOrganisationStartDate";
 
-const router = express.Router();
-
-router.get("/", (req: Request, res: Response) => {
-  connection.query(
-    `SELECT
+async function retrieveScheduleAccrualData(): Promise<
+  LoanScheduleAccrualData[]
+> {
+  const organisationStartDate = await retrieveOrganisationStartDate();
+  const sql = `
+  SELECT
   loan.id AS loanId,
   IF(loan.client_id IS NULL, mg.office_id, mc.office_id) AS officeId,
   ls.duedate AS duedate,
@@ -51,21 +55,26 @@ WHERE
   AND mpl.accounting_type = 3
   AND loan.is_npa = 0
   AND ls.duedate <= CURDATE()
-  AND (ls.duedate > 	2023-12-12 OR 	2023-12-12 IS NULL)
+  AND (ls.duedate > 	2023-12-12)
 ORDER BY
   loan.id,
-  ls.duedate`,
-    (queryErr, results) => {
-      if (queryErr) {
-        console.error("Error executing query:", queryErr);
-        res.status(500).send("Internal Server Error");
-        return;
-      }
+  ls.duedate
+  `;
 
-      res.json(results);
-      console.log(results);
-    }
-  );
-});
 
-export default router;
+  try {
+    console.error("Q:", sql);
+    return new Promise((resolve, reject) => {
+      connection.query(sql, (error, result) => {
+        if (error) reject(error);
+        resolve(result);
+      });
+    });
+  } catch (error) {
+    console.error("Error in retrieveScheduleAccrualData:", error);
+    return [];
+  }
+}
+
+
+export default retrieveScheduleAccrualData;
